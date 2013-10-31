@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndroidRSSReader</string>
+    <string name="feed">Feed</string>
+    <string name="editChannel">editChannel</string><string name="url_placeholder">channel`s url</string><string name="channel_placeholder">channel`s name</string>
+</resources>

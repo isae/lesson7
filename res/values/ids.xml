@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<item name="button" type="id">button</item>
+    <item name="feeds" type="id">feeds</item>
+    <item name="feedsPage" type="id">feedsPage</item>
+    <item name="feedTitle" type="id">feedTitle</item>
+    <item name="feedContent" type="id">feedContent</item>
+    <item name="toast_view" type="id">toast_view</item>
+    <item name="loading" type="id">loading</item>
+</resources>
