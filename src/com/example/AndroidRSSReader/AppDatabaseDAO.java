@@ -47,6 +47,7 @@ public class AppDatabaseDAO {
     private static final String TABLE_CHANNELS = "channels";
     private static final String TABLE_FEEDS = "feeds";
     private static final int DATABASE_VERSION = 2;
+    private static final String FEEDS_INSERT = "INSERT INTO feeds(_channelId,title,body) VALUES ";
 
     private final Context context;
 
@@ -136,7 +137,7 @@ public class AppDatabaseDAO {
 
     private Cursor fetchAllFeeds(Integer channelId) {
         return db.query(TABLE_FEEDS, new String[]{KEY_TITLE,
-                KEY_BODY}, KEY_CHANNEL_ID + "=" + channelId, null, null, null, null);
+                KEY_BODY}, KEY_CHANNEL_ID + " = " + channelId, null, null, null, null);
     }
 
     public ArrayList<Channel> getAllChannels() throws SQLException {
@@ -164,6 +165,22 @@ public class AppDatabaseDAO {
         }
         this.close();
         return result;
+    }
+
+    public void addFeeds(Integer channelId, ArrayList<Feed> feeds) throws SQLException {
+        try {
+            this.open();
+            for (int i = 0; i < feeds.size(); i++) {
+                Feed f = feeds.get(i);
+                ContentValues values = new ContentValues();
+                values.put(KEY_CHANNEL_ID, channelId);
+                values.put(KEY_TITLE, String.valueOf(f.title));
+                values.put(KEY_BODY, String.valueOf(f.description));
+                db.insert(TABLE_FEEDS, null, values);
+            }
+        } finally {
+            this.close();
+        }
     }
 
     public boolean deleteAllFeeds(Integer channelId) throws SQLException {

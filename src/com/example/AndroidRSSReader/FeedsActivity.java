@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +23,8 @@ import java.util.ArrayList;
  */
 public class FeedsActivity extends Activity {
 
-    final ArrayList<Feed> list = new ArrayList<Feed>();
+    ArrayList<Feed> list = new ArrayList<Feed>();
+    private final AppDatabaseDAO dao = new AppDatabaseDAO(this);
     private FeedsReceiver receiver;
     FeedsArrayAdapter adapter;
 
@@ -35,18 +37,20 @@ public class FeedsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.feeds);
         final ListView listview = (ListView) findViewById(R.id.feeds);
-
-        Log.e("lol", "lol", null);
-        Intent intent = new Intent(this, FeedsLoaderService.class);
-        intent.putExtra("url", getIntent().getStringExtra("url"));
-        startService(intent);
-
-
-
-
+        try {
+            list = dao.getAllFeeds(getIntent().getIntExtra("channelID", 0));
+        } catch (SQLException e) {
+            Log.e("!1111111111111","!!!!",e);
+        }
         adapter = new FeedsArrayAdapter(this,
                 android.R.layout.simple_list_item_1, list);
         listview.setAdapter(adapter);
+        Intent intent = new Intent(this, FeedsLoaderService.class);
+        intent.putExtra("url", getIntent().getStringExtra("url"));
+       startService(intent);
+
+
+
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -62,14 +66,14 @@ public class FeedsActivity extends Activity {
 
 
         });
-        receiver = new FeedsReceiver(adapter);
+        receiver = new FeedsReceiver(getIntent().getIntExtra("channelID", 0), adapter, dao);
         IntentFilter filter = new IntentFilter(FeedsReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver, filter);
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
     }

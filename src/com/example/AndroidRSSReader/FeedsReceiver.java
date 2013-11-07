@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -20,18 +21,28 @@ import java.util.ArrayList;
 public class FeedsReceiver extends BroadcastReceiver {
     public static final String ACTION_RESP = "feeds_loaded";
     private final FeedsArrayAdapter list;
+    private AppDatabaseDAO dao;
+    private final int channelID;
 
-    public FeedsReceiver(FeedsArrayAdapter list) {
+    public FeedsReceiver(Integer channelID, FeedsArrayAdapter list, AppDatabaseDAO dao) {
         super();
         this.list = list;
+        this.dao = dao;
+        this.channelID = channelID;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         ArrayList<Feed> text = (ArrayList<Feed>) intent.getSerializableExtra("feeds");
-        for (Feed seq : text) {
-            list.add(seq);
+        try {
+            dao.deleteAllFeeds(channelID);
+            for (Feed seq : text) {
+                list.add(seq);
+            }
+            list.notifyDataSetChanged();
+            dao.addFeeds(channelID, text);
+        } catch (SQLException e) {
+            Log.e("111", "111", e);
         }
-        list.notifyDataSetChanged();
     }
 }

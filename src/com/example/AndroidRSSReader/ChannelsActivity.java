@@ -132,6 +132,7 @@ public class ChannelsActivity extends Activity {
                 String url = values.get(position).url;
                 Intent intent = new Intent(getInstance(), FeedsActivity.class);
                 intent.putExtra("url", url);
+                intent.putExtra("channelID", values.get(position).dbId);
                 startActivity(intent);
                 adapter.notifyDataSetChanged();
             }
@@ -158,8 +159,5 @@ public class ChannelsActivity extends Activity {
         }
     }
 
-    private Context getContext() {
-        return this;  //To change body of created methods use File | Settings | File Templates.
-    }
 
 }
