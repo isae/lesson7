@@ -22,7 +22,7 @@ public class FeedActivity extends Activity {
         TextView title = (TextView) findViewById(R.id.feedTitle);
         WebView body = (WebView) findViewById(R.id.feedContent);
         title.setText(feed.title);
-        body.loadData("<?xml version='1.0' encoding='utf-8' ?>"+feed.description, "text/html", null);
+        body.loadData("<?xml version='1.0' encoding='utf-8' ?>" + feed.description, "text/html; charset=utf-8", null);
     }
 
 }

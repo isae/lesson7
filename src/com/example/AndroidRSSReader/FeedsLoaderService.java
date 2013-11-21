@@ -1,5 +1,7 @@
 package com.example.AndroidRSSReader;
 
+import android.*;
+import android.R;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
@@ -35,29 +37,43 @@ public class FeedsLoaderService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
-
+        boolean success = false;
+        String xml = null;
         ArrayList<Feed> list = new ArrayList<>();
         String url = intent.getStringExtra("url");
+        if (!url.startsWith("http://")) {
+            url = "http://" + url;
+        }
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(url);
         HttpResponse httpResponse = null;
         try {
             httpResponse = httpClient.execute(httpGet);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            Log.e("", "", e);
         }
-        HttpEntity httpEntity = httpResponse.getEntity();
-
-        RSSSaxParser parser = null;
-        try {
-            parser = new RSSSaxParser(EntityUtils.toString(httpEntity));
-            list = parser.parse();
-            for (Feed f : list) {
-                Log.e("hihih", String.valueOf(f.title), null);
+        if (httpResponse != null) {
+            HttpEntity httpEntity = httpResponse.getEntity();
+            byte[] x = new byte[0];
+            try {
+                x = EntityUtils.toByteArray(httpEntity);
+                xml = new String(x);
+                String encoding;
+                int i = xml.indexOf("encoding") + 10;
+                int j = xml.indexOf("\"?>");
+                if (i != -1 && j != -1) {
+                    encoding = xml.substring(i, j);
+                } else {
+                    encoding = "windows-1251";
+                }
+                xml = new String(x, encoding);
+            } catch (IOException e) {
+                Log.e("", "", e);
             }
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            RSSSaxParser parser = null;
+            parser = new RSSSaxParser(xml);
+            list = parser.parse();
+            success = true;
         }
 
 
@@ -65,7 +81,7 @@ public class FeedsLoaderService extends IntentService {
         broadcastIntent.setAction(FeedsReceiver.ACTION_RESP);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("feeds", list);
-        broadcastIntent.putExtra("success", true);
+        broadcastIntent.putExtra("success", success);
         sendBroadcast(broadcastIntent);
     }
 }

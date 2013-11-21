@@ -3,4 +3,17 @@
     <string name="app_name">AndroidRSSReader</string>
     <string name="feed">Feed</string>
     <string name="editChannel">editChannel</string><string name="url_placeholder">channel`s url</string><string name="channel_placeholder">channel`s name</string>
+    <string name="remove">Remove</string>
+    <string name="ok">OK</string>
+    <string name="edit_channel">Edit channel</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_channel">New channel</string>
+    <string name="add_new_channel">Add new channel</string>
+    <string name="refresh">Refresh</string>
+    <string name="loading1">Loading…</string>
+    <string name="open_in_browser_q">Open link in browser?</string>
+    <string name="feeds_reloaded">Feeds list has been updated</string>
+    <string name="no_connection">No Internet connection</string>
+    <string name="entry">Новость</string>
+    <string name="problems">An error occured while getting feeds</string>
 </resources>

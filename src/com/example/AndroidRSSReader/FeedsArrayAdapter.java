@@ -18,14 +18,27 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class FeedsArrayAdapter extends ArrayAdapter<Feed> {
+    private HashMap<CharSequence, Feed> map = new HashMap<>();
+
     public FeedsArrayAdapter(FeedsActivity context, int textViewResourceId,
                              ArrayList<Feed> objects) {
         super(context, textViewResourceId, objects);
+        for (Feed f : objects) {
+            map.put(String.valueOf(f.link), f);
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        Feed feed =getItem(position);
+    public void add(Feed f) {
+        if (!map.containsKey(f.link)) {
+            map.put(String.valueOf(f.link), f);
+            super.add(f);
+        }
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        Feed feed = getItem(position);
         TextView descr = new TextView(getContext());
         descr.setText(feed.title);
         return descr;

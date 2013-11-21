@@ -59,11 +59,7 @@ public class RssFeedHandler extends DefaultHandler {
             if (tag.equalsIgnoreCase("title")) {
                 tempFeed.title = temp;
             } else if (tag.equalsIgnoreCase("link")) {
-                try {
-                    tempFeed.link = new URL(temp.toString());
-                } catch (MalformedURLException e) {
-                    //link is empty
-                }
+                    tempFeed.link = temp.toString();
             } else if (tag.equalsIgnoreCase("description")) {
                 tempFeed.description = temp;
             } else if (tag.equalsIgnoreCase("pubDate")) {

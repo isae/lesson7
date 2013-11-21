@@ -32,19 +32,17 @@ public class ChannelsActivity extends Activity {
         return this;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.channels);
         final ListView channels = (ListView) findViewById(R.id.channels);
-        try {
-            values = dao.getAllChannels();
-        } catch (SQLException e) {
-            Log.e("crap", "crap", e);
-        }
+        values = dao.getAllChannels();
+
         final ChannelArrayAdapter adapter = new ChannelArrayAdapter(this, android.R.layout.simple_list_item_1, values);
         Button addNew = new Button(this);
-        addNew.setText("Add new channel");
+        addNew.setText(R.string.add_new_channel);
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,26 +50,22 @@ public class ChannelsActivity extends Activity {
                 final View layout = inflater.inflate(R.layout.channel_edit,
                         (ViewGroup) findViewById(R.id.toast_view));
                 AlertDialog.Builder alert = new AlertDialog.Builder(getInstance());
-                alert.setTitle("New channel");
+                alert.setTitle(R.string.new_channel);
                 alert.setView(layout);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         String title = ((EditText) layout.findViewById(R.id.editText)).getText().toString();
                         String url = ((EditText) layout.findViewById(R.id.editText1)).getText().toString();
-                        values.add(new Channel(title, url));
-                        try {
-                            Channel channel = new Channel(title, url);
-                            long id = dao.addChannel(channel);
-                            channel.dbId = (int) id;
-                        } catch (SQLException e) {
-                            Log.e("crap", "crap", e);
-                        }
+                        Channel channel = new Channel(title, url);
+                        long id = dao.addChannel(channel);
+                        channel.dbId = (int) id;
+                        values.add(channel);
                         adapter.notifyDataSetChanged();
                     }
                 });
 
-                alert.setNegativeButton("Cancel", null);
+                alert.setNegativeButton(R.string.cancel, null);
                 alert.show();
             }
         });
@@ -88,38 +82,30 @@ public class ChannelsActivity extends Activity {
                 final View layout = inflater.inflate(R.layout.channel_edit,
                         (ViewGroup) findViewById(R.id.toast_view));
                 AlertDialog.Builder alert = new AlertDialog.Builder(getInstance());
-                alert.setTitle("Edit channel");
+                alert.setTitle(R.string.edit_channel);
                 ((EditText) layout.findViewById(R.id.editText)).setText(channel.title);
                 ((EditText) layout.findViewById(R.id.editText1)).setText(channel.url);
                 alert.setView(layout);
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
                         String title = ((EditText) layout.findViewById(R.id.editText)).getText().toString();
                         String url = ((EditText) layout.findViewById(R.id.editText1)).getText().toString();
                         channel.title = title;
                         channel.url = url;
-                        try {
-                            dao.editChannel(channel);
-                        } catch (SQLException e) {
-                            Log.e("a", "a", e);
-                        }
+                        dao.editChannel(channel);
                         adapter.notifyDataSetChanged();
                     }
                 });
-                alert.setNeutralButton("Remove", new DialogInterface.OnClickListener() {
+                alert.setNeutralButton(R.string.remove, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        try {
-                            dao.deleteChannel(values.get(position).dbId);
-                        } catch (SQLException e) {
-                            Log.e("a", "a", e);
-                        }
+                        dao.deleteChannel(values.get(position).dbId);
                         values.remove(position);
                         adapter.notifyDataSetChanged();
                     }
                 });
 
-                alert.setNegativeButton("Cancel", null);
+                alert.setNegativeButton(getResources().getString(R.string.cancel), null);
                 alert.show();
                 return true;
             }
@@ -133,6 +119,7 @@ public class ChannelsActivity extends Activity {
                 Intent intent = new Intent(getInstance(), FeedsActivity.class);
                 intent.putExtra("url", url);
                 intent.putExtra("channelID", values.get(position).dbId);
+
                 startActivity(intent);
                 adapter.notifyDataSetChanged();
             }
@@ -154,7 +141,7 @@ public class ChannelsActivity extends Activity {
         public View getView(int pos, View convertView, ViewGroup parent) {
             TextView descr = new TextView(getContext());
             descr.setText(this.getItem(pos).title);
-            descr.setTextSize(20);
+            descr.setTextSize(40);
             return descr;
         }
     }

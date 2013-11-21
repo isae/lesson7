@@ -37,10 +37,8 @@ public class RSSSaxParser {
             xmlReader.parse(is);
             return handler.getFeeds();
         } catch (Exception e) {
-            Log.e("suck", "suck", e);
-            ArrayList<Feed> temp = new ArrayList<Feed>();
-            temp.add(new Feed("лошара"));
-            return temp;
+            Log.e("", "", e);
+            return null;
         }
     }
 }

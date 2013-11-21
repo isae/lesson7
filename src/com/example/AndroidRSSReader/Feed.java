@@ -1,6 +1,7 @@
 package com.example.AndroidRSSReader;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Timestamp;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.Date;
  */
 public class Feed implements Serializable {
     public CharSequence title;
-    public URL link;
+    public CharSequence link;
     public CharSequence description;
     public Date publicationDate;
     public CharSequence guid;
@@ -26,8 +27,9 @@ public class Feed implements Serializable {
         this.title = title;
     }
 
-    public Feed(CharSequence title, CharSequence description) {
+    public Feed(CharSequence title, CharSequence description, CharSequence link) {
         this.title = title;
         this.description = description;
+        this.link = link;
     }
 }
